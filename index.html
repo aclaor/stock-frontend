@@ -384,9 +384,9 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--b
         <button class="itab" onclick="setTab(this)">1m</button>
         <button class="itab" onclick="setTab(this)">5m</button>
         <button class="itab" onclick="setTab(this)">15m</button>
-        <button class="itab active" onclick="setTab(this)">1H</button>
+        <button class="itab" onclick="setTab(this)">1H</button>
         <button class="itab" onclick="setTab(this)">4H</button>
-        <button class="itab" onclick="setTab(this)">1D</button>
+        <button class="itab active" onclick="setTab(this)">1D</button>
       </div>
       <div class="chart-divider"></div>
       <div class="quote-tabs">
@@ -623,7 +623,7 @@ const SUPA_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIs
 
 // ── STATE ─────────────────────────────────────
 let supabaseClient = null, currentUser = null, currentSession = null;
-let chartData = null, currentRange = 200, currentPrice = 0, currentInterval = '1h';
+let chartData = null, currentRange = 200, currentPrice = 0, currentInterval = '1d';
 let currentQuote = 'USDT', authMode = 'signup', selectedPlan = 'free';
 let marketsRefreshTimer = null;
 
