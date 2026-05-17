@@ -1210,7 +1210,8 @@ window.addEventListener('DOMContentLoaded',function(){
   fetchLiveTicker();updatePairsList();
   setTimeout(runForecast,1200);
   setTimeout(renderStockGrid,500);
-  setTimeout(drawMiniCharts,600);
+  setTimeout(drawMiniCharts,800);
+  window.addEventListener('resize',drawMiniCharts);
 });
 </script>
 </body>
