@@ -83,7 +83,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--b
 .stat{display:flex;flex-direction:column;gap:2px;}
 .stat-label{font-size:10px;color:var(--text2);}
 .stat-val{font-size:12px;font-family:var(--mono);}
-.main-layout{display:grid;grid-template-columns:220px 1fr 280px;height:calc(100vh - 218px);overflow:hidden;}
+.main-layout{display:grid;grid-template-columns:220px 1fr 280px;height:calc(100vh - 218px);overflow:hidden;position:sticky;top:0;}
 .ob-panel{display:flex;flex-direction:column;background:var(--bg2);border-right:1px solid var(--border);overflow:hidden;}
 .ob-header{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid var(--border);}
 .ob-title{font-size:11px;font-weight:700;letter-spacing:0.5px;}
@@ -1207,7 +1207,8 @@ window.addEventListener('DOMContentLoaded',function(){
   if(logobtn){logobtn.addEventListener('click',function(e){e.stopPropagation();showHomeDrop();});document.addEventListener('click',function(e){var d=document.getElementById('home-drop'),lb=document.getElementById('logo-btn');if(d&&lb&&!d.contains(e.target)&&!lb.contains(e.target))d.classList.remove('open');});}
   fetchLiveTicker();updatePairsList();
   setTimeout(runForecast,1200);
-  // No auto-refresh - stocks update slower than crypto
+  setTimeout(renderStockGrid,500);
+  setTimeout(drawMiniCharts,600);
 });
 </script>
 </body>
