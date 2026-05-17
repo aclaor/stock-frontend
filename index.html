@@ -871,17 +871,9 @@ function loadPair(sym){var clean=sym.toUpperCase().trim();document.getElementByI
 // ── LIVE DATA ─────────────────────────────────
 function renderBottomTicker(){var inner=document.getElementById('bottom-bar-inner');if(!inner)return;inner.innerHTML=btData.concat(btData).map(function(d){var up=d.c>=0;return '<div class="bt" onclick="loadPair(\''+d.s.replace('/','')+'\')">'+'<span class="bt-s">'+d.s+'</span> <span class="bt-p">$'+d.p.toLocaleString(undefined,{maximumFractionDigits:4})+'</span> <span class="bt-c '+(up?'':'dn')+'">'+(up?'+':'')+d.c.toFixed(2)+'%</span></div>';}).join('');}
 async function fetchLiveTicker(){
-  // Use Yahoo Finance proxy for live stock prices
-  var symbols=['AAPL','MSFT','GOOGL','NVDA','TSLA','META','AMZN','AMD','NFLX','JPM'];
-  try{
-    var promises=symbols.map(function(s){
-      return fetch(API_BASE+'/forecast',{method:'POST',headers:{'x-api-token':DEV_TOKEN,'Content-Type':'application/json'},body:JSON.stringify({symbol:s,interval:'1d'})})
-        .then(function(r){return r.ok?r.json():null;}).catch(function(){return null;});
-    });
-    // Just update with placeholder - real prices from forecast
-    renderBottomTicker();
-    if(currentQuote==='TECH'||currentQuote==='FINANCE'||currentQuote==='HEALTH'||currentQuote==='ENERGY'||currentQuote==='ETFS')updatePairsList();
-  }catch(e){}
+  // Just render bottom ticker with static data - no API calls
+  renderBottomTicker();
+  updatePairsList();
 }
 
 // ── ORDER BOOK & TRADES ───────────────────────
@@ -1097,9 +1089,8 @@ window.addEventListener('DOMContentLoaded',function(){
   var logobtn=document.getElementById('logo-btn');
   if(logobtn){logobtn.addEventListener('click',function(e){e.stopPropagation();showHomeDrop();});document.addEventListener('click',function(e){var d=document.getElementById('home-drop'),lb=document.getElementById('logo-btn');if(d&&lb&&!d.contains(e.target)&&!lb.contains(e.target))d.classList.remove('open');});}
   fetchLiveTicker();updatePairsList();
-  setTimeout(runForecast,1000);
-  setInterval(fetchLiveTicker,10000);
-  setInterval(fetchAllTickers,10000);
+  setTimeout(runForecast,1200);
+  // No auto-refresh - stocks update slower than crypto
 });
 </script>
 </body>
