@@ -759,6 +759,7 @@ s1.charset='UTF-8';s1.setAttribute('crossorigin','*');s0.parentNode.insertBefore
 </script>
 <script>
 // ── CONSTANTS ─────────────────────────────────
+const CF_BASE   = 'https://investleey-api.alexclaor.workers.dev';
 const API_BASE  = 'https://stockvision-production-ae61.up.railway.app';
 const DEV_TOKEN = 'mystockvision2025';
 const SUPA_URL  = 'https://gkxpwqryakgzgvvprbkl.supabase.co';
@@ -1025,7 +1026,7 @@ function closeHomeDrop(){var d=document.getElementById('home-drop');if(d)d.class
 // ── PAYPAL ────────────────────────────────────
 async function startPayPal() {
   if (!currentUser){localStorage.setItem('zeus_pending_plan','pro');closePricing();showModal('signup');selectedPlan='pro';showToast('Create account first!','success');return;}
-  try{var r=await fetch(API_BASE+'/paypal/create-order',{method:'POST',headers:{'Content-Type':'application/json',...getAuthHeaders()},body:JSON.stringify({user_id:currentUser?currentUser.id:'',email:currentUser?currentUser.email:''})});var d=await r.json();if(d.approve_url)window.location.href=d.approve_url;else if(d.approval_url)window.location.href=d.approval_url;else showToast('PayPal error: '+(d.detail||'unknown'),'error');}
+  try{var r=await fetch(CF_BASE+'/paypal/create-order',{method:'POST',headers:{'Content-Type':'application/json',...getAuthHeaders()},body:JSON.stringify({user_id:currentUser?currentUser.id:'',email:currentUser?currentUser.email:''})});var d=await r.json();if(d.approve_url)window.location.href=d.approve_url;else if(d.approval_url)window.location.href=d.approval_url;else showToast('PayPal error: '+(d.detail||'unknown'),'error');}
   catch(e){showToast('PayPal error: '+e.message,'error');}
 }
 // ── CHART ─────────────────────────────────────
@@ -1105,7 +1106,7 @@ function loadPair(sym){var clean=sym.toUpperCase().trim();document.getElementByI
 function renderBottomTicker(){var inner=document.getElementById('bottom-bar-inner');if(!inner||!btData||btData.length===0)return;var items=btData.filter(function(d){return d.p>0;});if(items.length===0)return;inner.innerHTML=items.concat(items).map(function(d){var up=d.c>=0;var sym=d.s.replace('/','');return '<div class="bt" onclick="loadPair(\''+sym+'\')"><span class="bt-s">'+sym+'</span> <span class="bt-p">$'+d.p.toLocaleString(undefined,{maximumFractionDigits:2})+'</span> <span class="bt-c '+(up?'':'dn')+'">'+(up?'+':'')+d.c.toFixed(2)+'%</span></div>';}).join('');}
 async function fetchLiveTicker(){
   try{
-    var r = await fetch(API_BASE+'/ticker');
+    var r = await fetch(CF_BASE+'/ticker');
     if(!r.ok) throw new Error('failed');
     var data = await r.json();
     if(Array.isArray(data) && data.length > 0){
@@ -1381,7 +1382,7 @@ async function runForecast(){
 (function(){
   var params=new URLSearchParams(window.location.search);
   if(params.get('type')==='signup'){var pending=localStorage.getItem('zeus_pending_plan')||'free';setTimeout(function(){if(supabaseClient)supabaseClient.auth.getSession().then(function(res){if(res.data&&res.data.session){updateAuthUI(res.data.session.user);localStorage.removeItem('zeus_pending_plan');history.replaceState({},'',window.location.pathname);if(pending==='pro'){showToast('Email confirmed! Taking you to PayPal...','success');setTimeout(startPayPal,1500);}else{showToast('Email confirmed! Welcome!','success');}}});},1500);}
-  if(params.get('payment')==='success'){var token=params.get('token');if(token&&currentUser){fetch(API_BASE+'/paypal/capture/'+token,{method:'POST',headers:getAuthHeaders()}).then(function(r){return r.json();}).then(function(d){if(d.status==='success'){showToast('🎉 Upgraded to Pro!','success');if(supabaseClient)supabaseClient.auth.getUser().then(function(u){if(u.data.user)updateAuthUI(u.data.user);});}});}history.replaceState({},'',window.location.pathname);}
+  if(params.get('payment')==='success'){var token=params.get('token');if(token&&currentUser){fetch(CF_BASE+'/paypal/capture/'+token,{method:'POST',headers:getAuthHeaders()}).then(function(r){return r.json();}).then(function(d){if(d.status==='success'){showToast('🎉 Upgraded to Pro!','success');if(supabaseClient)supabaseClient.auth.getUser().then(function(u){if(u.data.user)updateAuthUI(u.data.user);});}});}history.replaceState({},'',window.location.pathname);}
   if(params.get('payment')==='cancel'){showToast('Payment cancelled.','error');history.replaceState({},'',window.location.pathname);}
 })();
 // ── INIT ──────────────────────────────────────
